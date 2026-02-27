@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Energy</title>
+    <script type="module" crossorigin src="/vanilla-app-template/index.js"></script>
+    <link rel="stylesheet" crossorigin href="/vanilla-app-template/assets/styles-CbLIfkwQ.css">
+  </head>
+  <body>
+    <header class="header">
+  <div class="container">
+    <nav class="nav">
+      <a class="nav-logo" href="./index.html" aria-label="Site logo">
+        <svg class="nav-logo-icon" width="100" height="30">
+          <use href="/vanilla-app-template/assets/sprite-E8vg0sBb.svg#logo"></use>
+        </svg>
+      </a>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link nav-link--current" href="./index.html">Home</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <main class="main-wrap">
+      <h1 class="visually-hidden">Your Energy — exercise catalog</h1>
+      <div class="container main-wrap-inner">
+        <aside class="quote-section">
+  <div class="quote-card">
+    <h2 class="quote-title">Quote of the day</h2>
+    <p class="quote-text" data-quote-text></p>
+    <p class="quote-author" data-quote-author></p>
+  </div>
+</aside>
+
+        <div class="content-column">
+          <section class="filters-section">
+  <h2 class="filters-heading">Filters</h2>
+  <div class="filter-tabs" role="tablist">
+    <button type="button" class="filter-tab active" data-filter-tab="Muscles" role="tab" aria-selected="true">Muscles</button>
+    <button type="button" class="filter-tab" data-filter-tab="Body parts" role="tab" aria-selected="false">Body parts</button>
+    <button type="button" class="filter-tab" data-filter-tab="Equipment" role="tab" aria-selected="false">Equipment</button>
+  </div>
+  <ul class="filter-categories" data-filter-categories></ul>
+</section>
+
+          <section class="exercises-section">
+  <form class="search-form" data-search-form>
+    <input type="search" class="search-input" name="keyword" placeholder="Search exercises..." data-search-input autocomplete="off" />
+    <button type="submit" class="search-btn">Search</button>
+  </form>
+  <ul class="exercises-list" data-exercises-list></ul>
+  <div class="pagination" data-pagination></div>
+</section>
+
+        </div>
+      </div>
+    </main>
+
+    <section class="subscription-section">
+  <div class="container">
+    <h2 class="subscription-heading">Subscribe to get new exercises</h2>
+    <form class="subscription-form" data-subscription-form>
+      <input type="email" class="subscription-input" name="email" placeholder="Enter your email" required />
+      <button type="submit" class="subscription-btn">Subscribe</button>
+    </form>
+    <p class="subscription-message subscription-message--success" data-subscription-success hidden>Thank you! You have successfully subscribed.</p>
+    <p class="subscription-message subscription-message--error" data-subscription-error hidden></p>
+  </div>
+</section>
+
+    <div class="modal-backdrop" data-modal-backdrop hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button type="button" class="modal-close" data-modal-close aria-label="Close modal">&times;</button>
+    <div class="modal-content" data-modal-content></div>
+  </div>
+</div>
+
+    <footer class="footer">
+  <div class="container">
+    <p class="footer-desc">
+      Made with ✨ by
+      <a
+        class="footer-link"
+        href="https://goit.global/ua/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GoIT team
+      </a>
+    </p>
+  </div>
+</footer>
+
+
+  </body>
+</html>
