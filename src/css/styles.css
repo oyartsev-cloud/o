@@ -4,14 +4,23 @@
   | default @import url()
   |============================
 */
+@import 'modern-normalize/modern-normalize.css';
+@import url('./fonts.css');
 /* Common styles */
 @import url('./reset.css');
 @import url('./base.css');
 @import url('./container.css');
 @import url('./animations.css');
 
+/* Layout */
+@import url('./layout.css');
 /* Sections style */
 @import url('./header.css');
+@import url('./quote.css');
+@import url('./filters.css');
+@import url('./exercises.css');
+@import url('./modal.css');
+@import url('./subscription.css');
 @import url('./vite-promo.css');
 @import url('./badges.css');
 @import url('./back-link.css');

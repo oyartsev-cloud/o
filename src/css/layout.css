@@ -1,0 +1,25 @@
+.main-wrap {
+  padding: 24px 0;
+}
+
+.main-wrap-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media only screen and (min-width: 1200px) {
+  .main-wrap-inner {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 40px;
+  }
+  .quote-section {
+    flex-shrink: 0;
+    width: 320px;
+  }
+  .content-column {
+    flex: 1;
+    min-width: 0;
+  }
+}
