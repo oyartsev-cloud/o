@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" fill="none" aria-hidden="true">
+  <rect width="640" height="360" fill="linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)"/>
+  <circle cx="320" cy="160" r="80" stroke="#f0b429" stroke-width="4" fill="none" opacity="0.8"/>
+  <path d="M280 200 L320 140 L360 200 L320 260 Z" stroke="#f0b429" stroke-width="3" fill="none" opacity="0.6"/>
+  <text x="320" y="300" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="18" font-family="system-ui">Your Energy</text>
+</svg>

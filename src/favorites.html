@@ -4,21 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Energy</title>
+    <title>Favorites — Your Energy</title>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
     <load src="./partials/header.html" icon-path="images/sprite.svg#logo" />
 
-    <main class="main-wrap">
-      <h1 class="visually-hidden">Your Energy — exercise catalog</h1>
-      <load src="./partials/hero.html" />
+    <main class="main-wrap favorites-page">
+      <h1 class="visually-hidden">Favorites — Your Energy</h1>
       <div class="container main-wrap-inner">
         <load src="./partials/quote.html" />
         <div class="content-column">
-          <section class="filters-wrap" id="filters">
-          <load src="./partials/filters.html" />
-          <load src="./partials/exercises.html" />
+          <section class="favorites-section">
+            <h2 class="favorites-section__title">Favorites</h2>
+            <ul class="exercises-list favorites-list" data-favorites-list></ul>
+            <p class="favorites-empty" data-favorites-empty hidden>Перелік улюблених порожній. Додайте вправи з головної сторінки.</p>
           </section>
         </div>
       </div>
@@ -28,6 +28,6 @@
     <load src="./partials/rating-modal.html" />
     <load src="./partials/footer.html" icon-path="images/sprite.svg#logo" />
 
-    <script type="module" src="./main.js"></script>
+    <script type="module" src="./favorites.js"></script>
   </body>
 </html>

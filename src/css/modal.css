@@ -110,6 +110,42 @@
   color: #333;
 }
 
+.modal-exercise-video {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  background: #000;
+}
+
+.modal-exercise-fav,
+.modal-exercise-give-rating {
+  display: inline-block;
+  margin-top: 8px;
+  margin-right: 12px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+.modal-exercise-fav {
+  background: #f0b429;
+  color: #1a1a2e;
+}
+
+.modal-exercise-give-rating {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.modal-exercise-fav:hover,
+.modal-exercise-give-rating:hover {
+  opacity: 0.9;
+}
+
 .modal-loading {
   text-align: center;
   padding: 48px 24px;

@@ -1,0 +1,22 @@
+<div class="rating-modal-backdrop" data-rating-modal-backdrop hidden>
+  <div class="rating-modal" role="dialog" aria-modal="true" aria-labelledby="rating-modal-title">
+    <button type="button" class="rating-modal__close" data-rating-modal-close aria-label="Close">&times;</button>
+    <h2 class="rating-modal__title" id="rating-modal-title">Give a rating</h2>
+    <form class="rating-modal__form" data-rating-form>
+      <fieldset class="rating-modal__fieldset">
+        <legend class="rating-modal__legend">Rating</legend>
+        <div class="rating-modal__radios">
+          <label><input type="radio" name="rating" value="1" /> 1</label>
+          <label><input type="radio" name="rating" value="2" /> 2</label>
+          <label><input type="radio" name="rating" value="3" /> 3</label>
+          <label><input type="radio" name="rating" value="4" /> 4</label>
+          <label><input type="radio" name="rating" value="5" /> 5</label>
+        </div>
+      </fieldset>
+      <p class="rating-modal__hint">1 — погано, 5 — відмінно.</p>
+      <label class="rating-modal__label">Email <input type="email" class="rating-modal__input" name="email" required data-rating-email /></label>
+      <p class="rating-modal__error" data-rating-error hidden></p>
+      <button type="submit" class="rating-modal__submit">Send</button>
+    </form>
+  </div>
+</div>
