@@ -5,23 +5,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page 2</title>
-    <link rel="stylesheet" crossorigin href="/vanilla-app-template/assets/styles-CbLIfkwQ.css">
+    <link rel="stylesheet" crossorigin href="/vanilla-app-template/assets/styles-Bp0JqjUH.css">
   </head>
   <body>
     <header class="header">
-  <div class="container">
-    <nav class="nav">
-      <a class="nav-logo" href="./index.html" aria-label="Site logo">
-        <svg class="nav-logo-icon" width="100" height="30">
-          <use href="/vanilla-app-template/assets/sprite-E8vg0sBb.svg#logo"></use>
-        </svg>
-      </a>
-      <ul class="nav-list">
-        <li class="nav-item">
-          <a class="nav-link nav-link--current" href="./index.html">Home</a>
+  <div class="container header__container">
+    <a class="header__logo" href="./index.html" aria-label="Your Energy — go to home">
+      <svg class="header__logo-icon" width="100" height="30" aria-hidden="true">
+        <use href="/vanilla-app-template/assets/sprite-E8vg0sBb.svg#logo"></use>
+      </svg>
+    </a>
+    <button type="button" class="header__burger" aria-label="Open menu" aria-expanded="false" data-burger>
+      <span class="header__burger-line"></span>
+      <span class="header__burger-line"></span>
+      <span class="header__burger-line"></span>
+    </button>
+    <div class="header__menu" data-header-menu>
+      <nav class="header__nav">
+        <ul class="header__nav-list">
+          <li><a class="header__nav-link header__nav-link--current" href="./index.html">Home</a></li>
+          <li><a class="header__nav-link" href="./favorites.html">Favorites</a></li>
+        </ul>
+      </nav>
+      <ul class="header__social" aria-label="Social links">
+        <li>
+          <a href="https://www.facebook.com/goITclub/" target="_blank" rel="noopener noreferrer" class="header__social-link" aria-label="Facebook">
+            <svg class="header__social-icon" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.instagram.com/goitclub/" target="_blank" rel="noopener noreferrer" class="header__social-link" aria-label="Instagram">
+            <svg class="header__social-icon" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.058 1.645-.07 4.849-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/c/GoIT" target="_blank" rel="noopener noreferrer" class="header__social-link" aria-label="YouTube">
+            <svg class="header__social-icon" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
         </li>
       </ul>
-    </nav>
+    </div>
   </div>
 </header>
 
@@ -37,18 +60,36 @@
     </main>
 
     <footer class="footer">
-  <div class="container">
-    <p class="footer-desc">
-      Made with ✨ by
-      <a
-        class="footer-link"
-        href="https://goit.global/ua/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        GoIT team
-      </a>
-    </p>
+  <div class="container footer__container">
+    <a href="./index.html" class="footer__logo" aria-label="Your Energy — go to home">
+      <svg class="footer__logo-icon" width="100" height="30" aria-hidden="true">
+        <use href="{=$icon-path}"></use>
+      </svg>
+    </a>
+    <ul class="footer__social" aria-label="Social links">
+      <li>
+        <a href="https://www.facebook.com/goITclub/" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Facebook">
+          <svg class="footer__social-icon" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.instagram.com/goitclub/" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram">
+          <svg class="footer__social-icon" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.058 1.645-.07 4.849-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.youtube.com/c/GoIT" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="YouTube">
+          <svg class="footer__social-icon" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+      </li>
+    </ul>
+    <p class="footer__slogan">Your Energy — рухайся щодня. Сила та здоров'я починаються з кроку.</p>
+    <form class="footer__subscribe" data-subscription-form>
+      <input type="email" class="footer__subscribe-input" name="email" placeholder="Email" required data-email-input />
+      <button type="submit" class="footer__subscribe-btn">Subscribe</button>
+      <p class="footer__subscribe-msg footer__subscribe-msg--success" data-subscription-success hidden>Дякуємо! Ви успішно підписалися.</p>
+      <p class="footer__subscribe-msg footer__subscribe-msg--error" data-subscription-error hidden></p>
+    </form>
   </div>
 </footer>
 

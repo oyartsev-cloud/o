@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Energy</title>
-    <script type="module" crossorigin src="/vanilla-app-template/index.js"></script>
+    <title>Favorites — Your Energy</title>
+    <script type="module" crossorigin src="/vanilla-app-template/favorites.js"></script>
     <link rel="modulepreload" crossorigin href="/vanilla-app-template/assets/api-C8FInpZX.js">
     <link rel="stylesheet" crossorigin href="/vanilla-app-template/assets/styles-Bp0JqjUH.css">
   </head>
@@ -51,22 +51,8 @@
 </header>
 
 
-    <main class="main-wrap">
-      <h1 class="visually-hidden">Your Energy — exercise catalog</h1>
-      <section class="hero-section">
-  <div class="container">
-    <p class="hero-section__desc">Your Energy — каталог вправ для силових тренувань. Обирайте фільтри за частиною тіла, м'язами чи обладнанням, знаходьте вправи та додавайте улюблені.</p>
-    <nav class="hero-section__tags" aria-label="Popular filters">
-      <a href="#filters" class="hero-section__tag">Muscles</a>
-      <a href="#filters" class="hero-section__tag">Body parts</a>
-      <a href="#filters" class="hero-section__tag">Equipment</a>
-    </nav>
-    <div class="hero-section__image-wrap">
-      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgMzYwIiBmaWxsPSJub25lIiBhcmlhLWhpZGRlbj0idHJ1ZSI+CiAgPHJlY3Qgd2lkdGg9IjY0MCIgaGVpZ2h0PSIzNjAiIGZpbGw9ImxpbmVhci1ncmFkaWVudCgxMzVkZWcsICMxYTFhMmUgMCUsICMxNjIxM2UgMTAwJSkiLz4KICA8Y2lyY2xlIGN4PSIzMjAiIGN5PSIxNjAiIHI9IjgwIiBzdHJva2U9IiNmMGI0MjkiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC44Ii8+CiAgPHBhdGggZD0iTTI4MCAyMDAgTDMyMCAxNDAgTDM2MCAyMDAgTDMyMCAyNjAgWiIgc3Ryb2tlPSIjZjBiNDI5IiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9Im5vbmUiIG9wYWNpdHk9IjAuNiIvPgogIDx0ZXh0IHg9IjMyMCIgeT0iMzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuNykiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWkiPllvdXIgRW5lcmd5PC90ZXh0Pgo8L3N2Zz4K" alt="Fitness" class="hero-section__image" width="640" height="360" loading="eager" />
-    </div>
-  </div>
-</section>
-
+    <main class="main-wrap favorites-page">
+      <h1 class="visually-hidden">Favorites — Your Energy</h1>
       <div class="container main-wrap-inner">
         <aside class="quote-section">
   <div class="quote-card">
@@ -80,29 +66,10 @@
 </aside>
 
         <div class="content-column">
-          <section class="filters-wrap" id="filters">
-          <section class="filters-section">
-  <h2 class="filters-heading">Filters</h2>
-  <div class="filter-tabs" role="tablist">
-    <button type="button" class="filter-tab active" data-filter-tab="Muscles" role="tab" aria-selected="true">Muscles</button>
-    <button type="button" class="filter-tab" data-filter-tab="Body parts" role="tab" aria-selected="false">Body parts</button>
-    <button type="button" class="filter-tab" data-filter-tab="Equipment" role="tab" aria-selected="false">Equipment</button>
-  </div>
-  <div data-categories-block>
-    <ul class="filter-categories" data-filter-categories></ul>
-  </div>
-</section>
-
-          <section class="exercises-section" hidden>
-  <h2 class="exercises-section__title" data-exercises-title></h2>
-  <form class="search-form" data-search-form>
-    <input type="search" class="search-input" name="keyword" placeholder="Search exercises..." data-search-input autocomplete="off" />
-    <button type="submit" class="search-btn">Search</button>
-  </form>
-  <ul class="exercises-list" data-exercises-list></ul>
-  <div class="pagination" data-pagination></div>
-</section>
-
+          <section class="favorites-section">
+            <h2 class="favorites-section__title">Favorites</h2>
+            <ul class="exercises-list favorites-list" data-favorites-list></ul>
+            <p class="favorites-empty" data-favorites-empty hidden>Перелік улюблених порожній. Додайте вправи з головної сторінки.</p>
           </section>
         </div>
       </div>

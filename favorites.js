@@ -1,0 +1,23 @@
+import{d as b}from"./assets/api-C8FInpZX.js";/* empty css                      */const L="your-energy-quote",y="your-energy-favorites";function $(){const e=new Date;return`${e.getFullYear()}-${String(e.getMonth()+1).padStart(2,"0")}-${String(e.getDate()).padStart(2,"0")}`}function f(){try{return JSON.parse(localStorage.getItem(y)||"[]")}catch{return[]}}function h(e){const t=f().filter(a=>a._id!==e);localStorage.setItem(y,JSON.stringify(t))}function i(e){const t=document.createElement("div");return t.textContent=e,t.innerHTML.replace(/"/g,"&quot;")}function c(e){const t=document.createElement("div");return t.textContent=e,t.innerHTML}function q(e){const t=Math.round(Number(e))||0;let a="";for(let r=1;r<=5;r++)a+=`<span class="exercise-card-rating-star ${r<=t?"filled":""}">★</span>`;return a}function _(){const e=document.querySelector("[data-quote-text]"),t=document.querySelector("[data-quote-author]"),a=$(),r=localStorage.getItem(L);if(r)try{const n=JSON.parse(r);if(n.date===a&&n.quote){e&&(e.textContent=n.quote),t&&(t.textContent=n.author||"");return}}catch{}e&&(e.textContent="Завантажте цитату на головній сторінці."),t&&(t.textContent="")}function v(){const e=document.querySelector("[data-favorites-list]"),t=document.querySelector("[data-favorites-empty]"),a=f();if(e){if(!a.length){e.innerHTML="",t&&(t.hidden=!1);return}t&&(t.hidden=!0),e.innerHTML=a.map(r=>`
+    <li class="exercise-card">
+      <img class="exercise-card-image" src="${i(r.gifUrl)}" alt="${i(r.name)}" loading="lazy" />
+      <div class="exercise-card-body">
+        <h3 class="exercise-card-name">${c(r.name)}</h3>
+        <div class="exercise-card-rating">${q(r.rating)}</div>
+        <p class="exercise-card-meta"><span>${c(r.bodyPart)}</span> <span>${c(r.target)}</span></p>
+        <div class="exercise-card-footer">
+          <span class="exercise-card-calories">${r.burnedCalories} cal</span>
+          <span class="exercise-card-time">${r.time} min</span>
+          <button type="button" class="exercise-card-start" data-exercise-id="${i(r._id)}">Start</button>
+          <button type="button" class="exercise-card-remove" data-remove-id="${i(r._id)}" aria-label="Remove from favorites">&#10006;</button>
+        </div>
+      </div>
+    </li>
+  `).join(""),e.querySelectorAll(".exercise-card-start").forEach(r=>{r.addEventListener("click",()=>x(r.getAttribute("data-exercise-id")))}),e.querySelectorAll(".exercise-card-remove").forEach(r=>{r.addEventListener("click",()=>{h(r.getAttribute("data-remove-id")),v()})})}}const o=document.querySelector("[data-modal-backdrop]"),d=document.querySelector("[data-modal-content]"),s=document.querySelector("[data-modal-close]");function g(){o&&(o.hidden=!0),document.body.style.overflow=""}function x(e){if(!o||!d)return;d.innerHTML='<div class="modal-loading">Loading...</div>',o.hidden=!1,document.body.style.overflow="hidden";const t=()=>{s==null||s.removeEventListener("click",t),o==null||o.removeEventListener("click",a),document.removeEventListener("keydown",r),g()},a=n=>{n.target===o&&t()},r=n=>{n.key==="Escape"&&t()};s==null||s.addEventListener("click",t),o==null||o.addEventListener("click",a),document.addEventListener("keydown",r),b(e).then(n=>{const S=f().some(E=>E._id===n._id);d.innerHTML=`
+        <img class="modal-exercise-image" src="${i(n.gifUrl)}" alt="${i(n.name)}" />
+        <h2 class="modal-exercise-name" id="modal-title">${c(n.name)}</h2>
+        <p class="modal-exercise-meta">${c(n.bodyPart)} • ${c(n.target)} • ${n.burnedCalories} cal • ${n.time} min</p>
+        <p class="modal-exercise-description">${c(n.description||"")}</p>
+        <button type="button" class="modal-exercise-fav" data-remove-from-fav data-exercise-id="${i(n._id)}">Remove from Favorites</button>
+      `;const l=d.querySelector("[data-remove-from-fav]");l&&S?l.addEventListener("click",()=>{h(n._id),g(),v()}):l&&l.remove()},()=>{d.innerHTML='<div class="modal-loading">Failed to load exercise.</div>'})}_();v();const u=document.querySelector("[data-burger]"),m=document.querySelector("[data-header-menu]");u&&m&&(u.addEventListener("click",()=>{const e=m.classList.toggle("is-open");u.setAttribute("aria-expanded",e)}),m.querySelectorAll(".header__nav-link").forEach(e=>{e.addEventListener("click",()=>{m.classList.remove("is-open"),u.setAttribute("aria-expanded","false")})}));const p=window.location.pathname;document.querySelectorAll(".header__nav-link").forEach(e=>{const t=e.getAttribute("href"),a=t==="./index.html"&&!p.includes("favorites")||t==="./favorites.html"&&p.includes("favorites");e.classList.toggle("header__nav-link--current",a)});
+//# sourceMappingURL=favorites.js.map
