@@ -1,5 +1,9 @@
 .hero-section {
   padding: 24px 0 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  margin: 0 0 24px;
+  color: white;
 }
 
 .hero-section__desc {
@@ -7,6 +11,7 @@
   line-height: 1.6;
   margin-bottom: 20px;
   max-width: 600px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .hero-section__tags {
@@ -19,19 +24,22 @@
 .hero-section__tag {
   display: inline-block;
   padding: 8px 16px;
-  background: #1a1a2e;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
   color: #fff;
-  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  transition: background 0.2s, transform 0.2s;
+  transition: all 0.3s ease;
 }
 
 .hero-section__tag:hover,
 .hero-section__tag:focus {
-  background: #16213e;
+  background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .hero-section__image-wrap {
