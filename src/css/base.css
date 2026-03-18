@@ -5,21 +5,21 @@
   line-height: 1.5;
   font-weight: 400;
 
-  --color-primary-dark: #242b4d;
-  --color-primary-medium: #363d5f;
-  --color-primary-light: #484f71;
-  --color-accent: #ff7979;
-  --color-accent-light: #ff9393;
-  --color-gradient-start: #242b4d;
-  --color-gradient-middle: #363d5f;
-  --color-gradient-end: #484f71;
+  --color-primary-dark: #2d334f;
+  --color-primary-medium: #3f4561;
+  --color-primary-light: #515773;
+  --color-accent: #ff8787;
+  --color-accent-light: #ffa1a1;
+  --color-gradient-start: #2d334f;
+  --color-gradient-middle: #3f4561;
+  --color-gradient-end: #515773;
   --color-text-primary: #ffffff;
-  --color-text-secondary: #d0d3e0;
-  --color-card-bg: rgba(255, 255, 255, 0.1);
-  --color-card-border: rgba(255, 255, 255, 0.15);
-  --color-shadow: rgba(0, 0, 0, 0.2);
-  --color-filter-bg: rgba(255, 255, 255, 0.1);
-  --color-filter-hover: rgba(255, 255, 255, 0.18);
+  --color-text-secondary: #d8dbe5;
+  --color-card-bg: rgba(255, 255, 255, 0.12);
+  --color-card-border: rgba(255, 255, 255, 0.18);
+  --color-shadow: rgba(0, 0, 0, 0.15);
+  --color-filter-bg: rgba(255, 255, 255, 0.12);
+  --color-filter-hover: rgba(255, 255, 255, 0.2);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
