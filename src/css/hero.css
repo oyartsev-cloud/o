@@ -1,15 +1,15 @@
 .hero-section {
-  padding: 90px 0;
-  min-height: 80vh;
+  padding: 120px 0;
+  min-height: 90vh;
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, rgba(45, 51, 79, 0.85) 0%, rgba(63, 69, 97, 0.85) 100%);
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.95) 0%, rgba(45, 53, 97, 0.95) 100%);
   position: relative;
   overflow: hidden;
-  border-radius: 20px;
-  margin: 0 0 40px;
+  border-radius: 28px;
+  margin: 0 0 56px;
   color: white;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
 }
 
 .hero-section::before {
@@ -19,17 +19,17 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 35% 65%, rgba(255, 135, 135, 0.08) 0%, transparent 50%),
-              radial-gradient(circle at 65% 35%, rgba(81, 87, 115, 0.1) 0%, transparent 50%);
+  background: radial-gradient(circle at 25% 75%, rgba(255, 107, 107, 0.12) 0%, transparent 50%),
+              radial-gradient(circle at 75% 25%, rgba(62, 76, 122, 0.15) 0%, transparent 50%);
   z-index: -1;
 }
 
 .hero-section__desc {
-  font-size: 17px;
-  line-height: 1.5;
-  margin-bottom: 28px;
-  max-width: 480px;
-  color: rgba(255, 255, 255, 0.95);
+  font-size: 19px;
+  line-height: 1.6;
+  margin-bottom: 36px;
+  max-width: 540px;
+  color: rgba(255, 255, 255, 0.92);
   font-weight: 400;
 }
 
@@ -42,17 +42,17 @@
 
 .hero-section__tag {
   display: inline-block;
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  font-size: 12px;
-  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 26px;
+  font-size: 14px;
+  font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .hero-section__tag:hover,
