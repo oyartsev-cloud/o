@@ -64,47 +64,50 @@
 }
 
 .exercise-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border-radius: 16px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  display: flex;
-  flex-direction: column;
   transition: all 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  position: relative;
 }
 
-.exercise-card:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  transform: translateY(-4px);
+.exercise-card:hover,
+.exercise-card:focus {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-accent);
 }
 
-.exercise-card-image {
+.exercise-card__img {
   width: 100%;
-  aspect-ratio: 1;
+  height: 200px;
   object-fit: cover;
-  background: #f5f5f5;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
 }
 
-.exercise-card-body {
-  padding: 16px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.exercise-card__body {
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(15, 52, 96, 0.8) 100%);
 }
 
-.exercise-card-name {
-  font-size: 18px;
+.exercise-card__name {
+  font-size: 16px;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin: 0 0 12px 0;
+  color: var(--color-text-primary);
   line-height: 1.3;
 }
 
-.exercise-card-rating {
+.exercise-card__meta {
   display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .exercise-card-rating-star {

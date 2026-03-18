@@ -1,6 +1,9 @@
 .footer {
-  padding: 32px 0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 48px 0;
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(15, 52, 96, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--color-card-border);
+  margin-top: auto;
 }
 
 .footer__container {
