@@ -99,3 +99,19 @@
     max-height: 360px;
   }
 }
+
+@media only screen and (min-width: 1024px) {
+  .hero-section {
+    padding: 60px 0 80px;
+  }
+  .hero-section__container {
+    gap: 60px;
+  }
+  .hero-section__desc {
+    font-size: 19px;
+    max-width: 540px;
+  }
+  .hero-section__image {
+    max-height: 400px;
+  }
+}

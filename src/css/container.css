@@ -13,6 +13,14 @@
   }
 }
 /* Styles for Desktop devices */
+@media only screen and (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+    padding: 0 32px;
+  }
+}
+
+/* Styles for Large Desktop devices */
 @media only screen and (min-width: 1400px) {
   .container {
     max-width: 1400px;

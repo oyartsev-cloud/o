@@ -8,18 +8,27 @@
   gap: 24px;
 }
 
-@media only screen and (min-width: 1400px) {
+@media only screen and (min-width: 1024px) {
   .main-wrap-inner {
     flex-direction: row;
     align-items: flex-start;
-    gap: 40px;
+    gap: 32px;
   }
   .quote-section {
     flex-shrink: 0;
-    width: 320px;
+    width: 280px;
   }
   .content-column {
     flex: 1;
     min-width: 0;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .main-wrap-inner {
+    gap: 40px;
+  }
+  .quote-section {
+    width: 320px;
   }
 }

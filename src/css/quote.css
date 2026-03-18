@@ -49,12 +49,18 @@
   }
 }
 
-@media only screen and (min-width: 1400px) {
+@media only screen and (min-width: 1024px) {
   .quote-section {
     padding: 0;
   }
   .quote-card {
     position: sticky;
+    top: 24px;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .quote-card {
     top: 24px;
   }
 }

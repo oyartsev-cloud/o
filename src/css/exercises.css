@@ -60,6 +60,13 @@
   }
 }
 
+@media only screen and (min-width: 1024px) {
+  .exercises-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+}
+
 @media only screen and (min-width: 1400px) {
   .exercises-list {
     grid-template-columns: repeat(3, 1fr);
