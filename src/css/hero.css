@@ -86,6 +86,12 @@
   .hero-section {
     padding: 32px 0 40px;
   }
+  .hero-section__container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
   .hero-section__desc {
     font-size: 18px;
   }
