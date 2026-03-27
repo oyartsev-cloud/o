@@ -1,18 +1,14 @@
 /* ===================================
-   FAVORITES PAGE - Full Implementation
+   FAVORITES PAGE - JavaScript
    Complete functionality for favorites page
    =================================== */
 
-import { 
-  getQuote, 
-  getExerciseById, 
-  patchExerciseRating, 
-  postSubscription 
-} from './api.js';
+// API Base URL
+const API_BASE_URL = 'https://your-energy.b.goit.study/api';
 
 // Application State
 const state = {
-  favorites: [],
+  favorites: JSON.parse(localStorage.getItem('favorites') || '[]'),
   quote: null,
   modalData: null,
   isLoading: false
@@ -20,14 +16,13 @@ const state = {
 
 // DOM Elements
 const elements = {
-  quoteContainer: null,
+  quoteContent: null,
   favoritesGrid: null,
-  favoritesCount: null,
-  modal: null,
+  exerciseModal: null,
   ratingModal: null,
   subscriptionForm: null,
-  mobileMenu: null,
   mobileMenuToggle: null,
+  mobileMenu: null,
   overlay: null
 };
 
@@ -41,15 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Elements Initialization
 function initializeElements() {
-  elements.quoteContainer = document.querySelector('.quote-content');
-  elements.favoritesGrid = document.querySelector('.favorites-section__grid');
-  elements.favoritesCount = document.querySelector('.favorites-count');
-  elements.modal = document.querySelector('.exercise-modal');
-  elements.ratingModal = document.querySelector('.rating-modal');
-  elements.subscriptionForm = document.querySelector('.subscription-form');
-  elements.mobileMenu = document.querySelector('.header__mobile-menu');
+  elements.quoteContent = document.querySelector('.quote__content');
+  elements.favoritesGrid = document.querySelector('.favorites__grid');
+  elements.exerciseModal = document.getElementById('exercise-modal');
+  elements.ratingModal = document.getElementById('rating-modal');
+  elements.subscriptionForm = document.querySelector('.footer__subscription');
   elements.mobileMenuToggle = document.querySelector('.header__mobile-toggle');
-  elements.overlay = document.querySelector('.header__overlay');
+  elements.mobileMenu = document.querySelector('.header__mobile-menu');
+  elements.overlay = document.querySelector('.overlay');
 }
 
 // Event Listeners
@@ -72,9 +66,6 @@ function initializeEventListeners() {
   // Modal close events
   document.addEventListener('click', handleModalClose);
   document.addEventListener('keydown', handleEscapeKey);
-
-  // Scroll events
-  window.addEventListener('scroll', handleScroll);
 }
 
 // Load Initial Data
@@ -82,12 +73,32 @@ async function loadInitialData() {
   try {
     await Promise.all([
       loadQuote(),
-      loadFavorites()
+      renderFavorites()
     ]);
   } catch (error) {
     console.error('Error loading initial data:', error);
     showError('Failed to load initial data');
   }
+}
+
+// API Functions
+async function fetchApi(endpoint, options = {}) {
+  const url = `${API_BASE_URL}${endpoint}`;
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+  
+  if (!response.ok) {
+    const error = new Error(`API error: ${response.status}`);
+    error.status = response.status;
+    throw error;
+  }
+  
+  return response.json();
 }
 
 // Quote Management
@@ -103,81 +114,79 @@ async function loadQuote() {
       return;
     }
     
-    const quote = await getQuote();
+    const quote = await fetchApi('/quote');
     state.quote = quote;
     localStorage.setItem('dailyQuote', JSON.stringify(quote));
     localStorage.setItem('quoteDate', today);
     renderQuote();
   } catch (error) {
     console.error('Error loading quote:', error);
+    renderQuoteError();
   }
 }
 
 function renderQuote() {
-  if (!elements.quoteContainer || !state.quote) return;
+  if (!elements.quoteContent || !state.quote) return;
   
   const quoteHTML = `
-    <p class="quote-text">"${state.quote.quote}"</p>
-    <cite class="quote-author">${state.quote.author}</cite>
+    <p class="quote__text">"${state.quote.quote}"</p>
+    <cite class="quote__author">${state.quote.author}</cite>
   `;
   
-  elements.quoteContainer.innerHTML = quoteHTML;
+  elements.quoteContent.innerHTML = quoteHTML;
+}
+
+function renderQuoteError() {
+  if (!elements.quoteContent) return;
+  
+  elements.quoteContent.innerHTML = `
+    <p class="quote__text">Не вдалося завантажити цитату дня</p>
+  `;
 }
 
 // Favorites Management
-function loadFavorites() {
-  const stored = localStorage.getItem('favorites');
-  if (stored) {
-    state.favorites = JSON.parse(stored);
-  }
-  renderFavorites();
-}
-
 function renderFavorites() {
   if (!elements.favoritesGrid) return;
   
   if (state.favorites.length === 0) {
     elements.favoritesGrid.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state__icon">
+      <div class="no-favorites">
+        <div class="no-favorites__icon">
           <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
         </div>
-        <h3 class="empty-state__title">Перелік улюблених порожній</h3>
-        <p class="empty-state__description">
+        <h3 class="no-favorites__title">Перелік улюблених порожній</h3>
+        <p class="no-favorites__description">
           Додайте вправи до улюблених, щоб вони відображалися тут
         </p>
         <a href="/" class="btn btn--primary">Перейти до вправ</a>
       </div>
     `;
-    
-    if (elements.favoritesCount) {
-      elements.favoritesCount.textContent = '0 вправ';
-    }
     return;
   }
   
   const favoritesHTML = state.favorites.map(exercise => `
-    <article class="favorite-exercise-card card card--interactive" data-id="${exercise._id}">
-      <div class="favorite-exercise-card__image-wrapper">
-        <img src="${exercise.gifUrl || './images/placeholder.jpg'}" alt="${exercise.name}" class="favorite-exercise-card__image">
-      </div>
-      <div class="favorite-exercise-card__body">
-        <h3 class="favorite-exercise-card__title">${exercise.name}</h3>
-        <div class="favorite-exercise-card__meta">
-          <span class="favorite-exercise-card__badge">${exercise.bodyPart}</span>
-          <span class="favorite-exercise-card__badge">${exercise.target}</span>
+    <article class="exercise-card" data-id="${exercise._id}">
+      <img src="${exercise.gifUrl || './images/placeholder.jpg'}" alt="${exercise.name}" class="exercise-card__image">
+      <div class="exercise-card__content">
+        <h3 class="exercise-card__title">${exercise.name}</h3>
+        <div class="exercise-card__meta">
+          <span class="exercise-card__badge">${exercise.bodyPart}</span>
+          <span class="exercise-card__badge">${exercise.target}</span>
         </div>
-        <div class="favorite-exercise-card__stats">
-          <span class="favorite-exercise-card__calories">${exercise.burnedCalories || 0} калорій</span>
-          <span class="favorite-exercise-card__time">3 хв</span>
+        <div class="exercise-card__stats">
+          <span>${exercise.burnedCalories || 0} калорій</span>
+          <span>3 хв</span>
         </div>
-        <div class="favorite-exercise-card__actions">
-          <button class="favorite-exercise-card__start-btn btn btn--primary" data-id="${exercise._id}">
+        <div class="exercise-card__rating">
+          ${renderStars(exercise.rating || 0)}
+        </div>
+        <div class="exercise-card__actions">
+          <button class="exercise-card__start-btn" data-id="${exercise._id}">
             Start
           </button>
-          <button class="favorite-exercise-card__remove-btn btn btn--outline" data-id="${exercise._id}">
+          <button class="exercise-card__remove-btn" data-id="${exercise._id}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 6h18"></path>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -191,20 +200,13 @@ function renderFavorites() {
   elements.favoritesGrid.innerHTML = favoritesHTML;
   
   // Add event listeners
-  elements.favoritesGrid.querySelectorAll('.favorite-exercise-card__start-btn').forEach(button => {
+  elements.favoritesGrid.querySelectorAll('.exercise-card__start-btn').forEach(button => {
     button.addEventListener('click', handleExerciseStart);
   });
   
-  elements.favoritesGrid.querySelectorAll('.favorite-exercise-card__remove-btn').forEach(button => {
+  elements.favoritesGrid.querySelectorAll('.exercise-card__remove-btn').forEach(button => {
     button.addEventListener('click', handleFavoriteRemove);
   });
-  
-  // Update count
-  if (elements.favoritesCount) {
-    const count = state.favorites.length;
-    const word = count === 1 ? 'вправа' : (count >= 2 && count <= 4 ? 'вправи' : 'вправ');
-    elements.favoritesCount.textContent = `${count} ${word}`;
-  }
 }
 
 function handleFavoriteRemove(event) {
@@ -224,7 +226,7 @@ async function handleExerciseStart(event) {
   const exerciseId = event.target.dataset.id;
   
   try {
-    const exercise = await getExerciseById(exerciseId);
+    const exercise = await fetchApi(`/exercises/${exerciseId}`);
     state.modalData = exercise;
     renderExerciseModal();
     openModal('exercise');
@@ -240,181 +242,94 @@ function renderExerciseModal() {
   const exercise = state.modalData;
   const isFavorite = state.favorites.some(fav => fav._id === exercise._id);
   
-  const modalHTML = `
-    <div class="exercise-modal">
-      <div class="exercise-modal__overlay"></div>
-      <div class="exercise-modal__content">
-        <button class="exercise-modal__close" aria-label="Закрити">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-        
-        <div class="exercise-modal__media">
-          ${exercise.gifUrl ? `
-            <video autoplay loop muted playsinline class="exercise-modal__video">
-              <source src="${exercise.gifUrl}" type="video/mp4">
-            </video>
-          ` : `
-            <img src="${exercise.image || './images/placeholder.jpg'}" alt="${exercise.name}" class="exercise-modal__image">
-          `}
-        </div>
-        
-        <div class="exercise-modal__info">
-          <h2 class="exercise-modal__title">${exercise.name}</h2>
-          
-          <div class="exercise-modal__rating">
-            ${renderStars(exercise.rating || 0)}
-            <span class="exercise-modal__rating-value">(${exercise.rating || 0})</span>
-          </div>
-          
-          <div class="exercise-modal__details">
-            <div class="exercise-modal__detail">
-              <span class="exercise-modal__label">Ціль:</span>
-              <span class="exercise-modal__value">${exercise.target}</span>
-            </div>
-            <div class="exercise-modal__detail">
-              <span class="exercise-modal__label">Частина тіла:</span>
-              <span class="exercise-modal__value">${exercise.bodyPart}</span>
-            </div>
-            <div class="exercise-modal__detail">
-              <span class="exercise-modal__label">Популярність:</span>
-              <span class="exercise-modal__value">${exercise.popularity || 0}%</span>
-            </div>
-            <div class="exercise-modal__detail">
-              <span class="exercise-modal__label">Калорії:</span>
-              <span class="exercise-modal__value">${exercise.burnedCalories || 0} калорій за 3 хв</span>
-            </div>
-          </div>
-          
-          <p class="exercise-modal__description">${exercise.description || ''}</p>
-          
-          <div class="exercise-modal__actions">
-            <button class="exercise-modal__favorite-btn ${isFavorite ? 'favorited' : ''}" data-id="${exercise._id}">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-              </svg>
-              ${isFavorite ? 'Видалити' : 'Додати'}
-            </button>
-            
-            <button class="exercise-modal__rating-btn btn btn--primary">
-              Give a rating
-            </button>
-          </div>
-        </div>
+  // Update modal content
+  const modalTitle = elements.exerciseModal.querySelector('.modal__title');
+  const modalMedia = elements.exerciseModal.querySelector('.modal__media');
+  const modalDescription = elements.exerciseModal.querySelector('.modal__description');
+  const modalFavorite = elements.exerciseModal.querySelector('.modal__favorite');
+  
+  if (modalTitle) modalTitle.textContent = exercise.name;
+  
+  if (modalMedia) {
+    if (exercise.gifUrl) {
+      modalMedia.innerHTML = `
+        <video autoplay loop muted playsinline class="modal__video">
+          <source src="${exercise.gifUrl}" type="video/mp4">
+        </video>
+      `;
+    } else {
+      modalMedia.innerHTML = `
+        <img src="${exercise.image || './images/placeholder.jpg'}" alt="${exercise.name}" class="modal__image">
+      `;
+    }
+  }
+  
+  if (modalDescription) {
+    modalDescription.innerHTML = `
+      <div class="modal__details">
+        <p><strong>Ціль:</strong> ${exercise.target}</p>
+        <p><strong>Частина тіла:</strong> ${exercise.bodyPart}</p>
+        <p><strong>Популярність:</strong> ${exercise.popularity || 0}%</p>
+        <p><strong>Калорії:</strong> ${exercise.burnedCalories || 0} за 3 хв</p>
       </div>
-    </div>
-  `;
-  
-  // Create modal if it doesn't exist
-  if (!elements.modal) {
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = modalHTML;
-    document.body.appendChild(modalContainer.firstElementChild);
-    elements.modal = document.querySelector('.exercise-modal');
-  } else {
-    elements.modal.innerHTML = modalHTML;
+      <p>${exercise.description || ''}</p>
+    `;
   }
   
-  // Add event listeners
-  const closeBtn = elements.modal.querySelector('.exercise-modal__close');
-  const favoriteBtn = elements.modal.querySelector('.exercise-modal__favorite-btn');
-  const ratingBtn = elements.modal.querySelector('.exercise-modal__rating-btn');
-  const overlay = elements.modal.querySelector('.exercise-modal__overlay');
-  
-  closeBtn.addEventListener('click', () => closeModal('exercise'));
-  overlay.addEventListener('click', () => closeModal('exercise'));
-  favoriteBtn.addEventListener('click', handleFavoriteToggle);
-  ratingBtn.addEventListener('click', openRatingModal);
+  if (modalFavorite) {
+    modalFavorite.textContent = isFavorite ? 'Видалити з улюблених' : 'Додати до улюблених';
+    modalFavorite.onclick = () => handleFavoriteToggle(exercise._id);
+  }
 }
 
-function renderStars(rating) {
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 !== 0;
-  const emptyStars = 5 - Math.ceil(rating);
-  
-  let stars = '';
-  for (let i = 0; i < fullStars; i++) {
-    stars += '<div class="exercise-modal__star">★</div>';
+function openModal(type) {
+  const modal = type === 'exercise' ? elements.exerciseModal : elements.ratingModal;
+  if (modal) {
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
   }
-  if (hasHalfStar) {
-    stars += '<div class="exercise-modal__star">☆</div>';
-  }
-  for (let i = 0; i < emptyStars; i++) {
-    stars += '<div class="exercise-modal__star empty">☆</div>';
-  }
-  
-  return stars;
 }
 
+function closeModal(type) {
+  const modal = type === 'exercise' ? elements.exerciseModal : elements.ratingModal;
+  if (modal) {
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+}
+
+function handleModalClose(event) {
+  const closeBtn = event.target.closest('.modal__close');
+  const overlay = event.target.closest('.modal__overlay');
+  
+  if (closeBtn || overlay) {
+    if (elements.exerciseModal && elements.exerciseModal.getAttribute('aria-hidden') === 'false') {
+      closeModal('exercise');
+    }
+    if (elements.ratingModal && elements.ratingModal.getAttribute('aria-hidden') === 'false') {
+      closeModal('rating');
+    }
+  }
+}
+
+function handleEscapeKey(event) {
+  if (event.key === 'Escape') {
+    if (elements.exerciseModal && elements.exerciseModal.getAttribute('aria-hidden') === 'false') {
+      closeModal('exercise');
+    }
+    if (elements.ratingModal && elements.ratingModal.getAttribute('aria-hidden') === 'false') {
+      closeModal('rating');
+    }
+    if (elements.mobileMenu && elements.mobileMenu.classList.contains('active')) {
+      closeMobileMenu();
+    }
+  }
+}
+
+// Rating Modal
 function openRatingModal() {
-  renderRatingModal();
+  closeModal('exercise');
   openModal('rating');
-}
-
-function renderRatingModal() {
-  const ratingModalHTML = `
-    <div class="rating-modal">
-      <div class="rating-modal__overlay"></div>
-      <div class="rating-modal__content">
-        <button class="rating-modal__close" aria-label="Закрити">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-        
-        <h2 class="rating-modal__title">Оцініть вправу</h2>
-        
-        <div class="rating-modal__stars">
-          ${[1, 2, 3, 4, 5].map(rating => `
-            <input type="radio" id="rating-${rating}" name="rating" value="${rating}" class="rating-modal__radio">
-            <label for="rating-${rating}" class="rating-modal__star">
-              ★
-            </label>
-          `).join('')}
-        </div>
-        
-        <form class="rating-modal__form">
-          <div class="rating-modal__form-group">
-            <label for="rating-email" class="rating-modal__label">Email:</label>
-            <input 
-              type="email" 
-              id="rating-email" 
-              class="rating-modal__input" 
-              placeholder="your.email@example.com"
-              required
-              pattern="^\\w+(\\.\\w+)?@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$"
-            >
-          </div>
-          
-          <button type="submit" class="rating-modal__submit btn btn--primary">
-            Send
-          </button>
-        </form>
-      </div>
-    </div>
-  `;
-  
-  // Create rating modal if it doesn't exist
-  if (!elements.ratingModal) {
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = ratingModalHTML;
-    document.body.appendChild(modalContainer.firstElementChild);
-    elements.ratingModal = document.querySelector('.rating-modal');
-  } else {
-    elements.ratingModal.innerHTML = ratingModalHTML;
-  }
-  
-  // Add event listeners
-  const closeBtn = elements.ratingModal.querySelector('.rating-modal__close');
-  const overlay = elements.ratingModal.querySelector('.rating-modal__overlay');
-  const form = elements.ratingModal.querySelector('.rating-modal__form');
-  
-  closeBtn.addEventListener('click', () => closeModal('rating'));
-  overlay.addEventListener('click', () => closeModal('rating'));
-  form.addEventListener('submit', handleRatingSubmit);
 }
 
 async function handleRatingSubmit(event) {
@@ -422,7 +337,7 @@ async function handleRatingSubmit(event) {
   
   const formData = new FormData(event.target);
   const rating = parseInt(formData.get('rating'));
-  const email = formData.get('email') || document.getElementById('rating-email').value;
+  const email = formData.get('email');
   
   if (!rating || !email) {
     showError('Будь ласка, оберіть рейтинг та введіть email');
@@ -430,18 +345,21 @@ async function handleRatingSubmit(event) {
   }
   
   try {
-    await patchExerciseRating(state.modalData._id, rating);
+    await fetchApi(`/exercises/${state.modalData._id}/rating`, {
+      method: 'PATCH',
+      body: JSON.stringify({ rating }),
+    });
+    
     showSuccess('Рейтинг успішно надіслано!');
     closeModal('rating');
-    closeModal('exercise');
   } catch (error) {
     console.error('Error submitting rating:', error);
     showError('Не вдалося надіслати рейтинг');
   }
 }
 
-function handleFavoriteToggle(event) {
-  const exerciseId = event.currentTarget.dataset.id;
+// Favorites Toggle
+function handleFavoriteToggle(exerciseId) {
   const exercise = state.favorites.find(ex => ex._id === exerciseId);
   
   if (!exercise) {
@@ -449,13 +367,6 @@ function handleFavoriteToggle(event) {
     if (state.modalData) {
       state.favorites.push(state.modalData);
       localStorage.setItem('favorites', JSON.stringify(state.favorites));
-      event.currentTarget.classList.add('favorited');
-      event.currentTarget.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-        </svg>
-        Видалити
-      `;
       showSuccess('Вправу додано до улюблених');
     }
   } else {
@@ -464,16 +375,11 @@ function handleFavoriteToggle(event) {
     if (index > -1) {
       state.favorites.splice(index, 1);
       localStorage.setItem('favorites', JSON.stringify(state.favorites));
-      event.currentTarget.classList.remove('favorited');
-      event.currentTarget.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-        </svg>
-        Додати
-      `;
       showSuccess('Вправу видалено з улюблених');
     }
   }
+  
+  renderExerciseModal(); // Update modal button
 }
 
 // Subscription Management
@@ -489,7 +395,11 @@ async function handleSubscriptionSubmit(event) {
   }
   
   try {
-    await postSubscription(email);
+    await fetchApi('/subscription', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+    
     showSuccess('Підписка успішна!');
     event.target.reset();
   } catch (error) {
@@ -523,62 +433,26 @@ function closeMobileMenu() {
   document.body.style.overflow = '';
 }
 
-// Modal Management
-function openModal(type) {
-  const modal = type === 'exercise' ? elements.modal : elements.ratingModal;
-  if (modal) {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-}
-
-function closeModal(type) {
-  const modal = type === 'exercise' ? elements.modal : elements.ratingModal;
-  if (modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-}
-
-function handleModalClose(event) {
-  const closeBtn = event.target.closest('.exercise-modal__close, .rating-modal__close');
-  const overlay = event.target.closest('.exercise-modal__overlay, .rating-modal__overlay');
-  
-  if (closeBtn || overlay) {
-    if (elements.modal && elements.modal.classList.contains('active')) {
-      closeModal('exercise');
-    }
-    if (elements.ratingModal && elements.ratingModal.classList.contains('active')) {
-      closeModal('rating');
-    }
-  }
-}
-
-function handleEscapeKey(event) {
-  if (event.key === 'Escape') {
-    if (elements.modal && elements.modal.classList.contains('active')) {
-      closeModal('exercise');
-    }
-    if (elements.ratingModal && elements.ratingModal.classList.contains('active')) {
-      closeModal('rating');
-    }
-    if (elements.mobileMenu && elements.mobileMenu.classList.contains('active')) {
-      closeMobileMenu();
-    }
-  }
-}
-
-// Scroll Management
-function handleScroll() {
-  const header = document.querySelector('.header');
-  const scrolled = window.scrollY > 50;
-  
-  if (header) {
-    header.classList.toggle('scrolled', scrolled);
-  }
-}
-
 // Utility Functions
+function renderStars(rating) {
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 !== 0;
+  const emptyStars = 5 - Math.ceil(rating);
+  
+  let stars = '';
+  for (let i = 0; i < fullStars; i++) {
+    stars += '<span class="star">★</span>';
+  }
+  if (hasHalfStar) {
+    stars += '<span class="star">☆</span>';
+  }
+  for (let i = 0; i < emptyStars; i++) {
+    stars += '<span class="star empty">☆</span>';
+  }
+  
+  return stars;
+}
+
 function showError(message) {
   showNotification(message, 'error');
 }
@@ -591,6 +465,20 @@ function showNotification(message, type = 'info') {
   const notification = document.createElement('div');
   notification.className = `notification notification--${type}`;
   notification.textContent = message;
+  notification.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    background-color: ${type === 'error' ? '#f56565' : type === 'success' ? '#48bb78' : '#3182ce'};
+    color: white;
+    border-radius: 8px;
+    font-weight: 500;
+    z-index: 9999;
+    transform: translateY(100px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  `;
   
   document.body.appendChild(notification);
   
@@ -601,7 +489,7 @@ function showNotification(message, type = 'info') {
   
   // Remove after 3 seconds
   setTimeout(() => {
-    notification.style.transform = 'translateY(100%)';
+    notification.style.transform = 'translateY(100px)';
     setTimeout(() => {
       if (notification.parentNode) {
         notification.parentNode.removeChild(notification);
@@ -614,7 +502,7 @@ function showNotification(message, type = 'info') {
 window.FavoritesApp = {
   state,
   loadQuote,
-  loadFavorites,
+  renderFavorites,
   openModal,
   closeModal
 };

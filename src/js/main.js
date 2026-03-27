@@ -1,16 +1,10 @@
 /* ===================================
-   YOUR ENERGY APP - Full Implementation
+   YOUR ENERGY - Main JavaScript
    Complete functionality according to requirements
    =================================== */
 
-import { 
-  getQuote, 
-  getFilters, 
-  getExercises, 
-  getExerciseById, 
-  patchExerciseRating, 
-  postSubscription 
-} from './api.js';
+// API Base URL
+const API_BASE_URL = 'https://your-energy.b.goit.study/api';
 
 // Application State
 const state = {
@@ -22,24 +16,22 @@ const state = {
   exercises: [],
   filters: [],
   quote: null,
-  favorites: [],
-  isLoading: false,
-  modalData: null
+  favorites: JSON.parse(localStorage.getItem('favorites') || '[]'),
+  isLoading: false
 };
 
 // DOM Elements
 const elements = {
-  quoteContainer: null,
+  quoteContent: null,
   filtersContainer: null,
   exercisesContainer: null,
   searchForm: null,
   paginationContainer: null,
-  modal: null,
+  exerciseModal: null,
   ratingModal: null,
   subscriptionForm: null,
-  filterTabs: null,
-  mobileMenu: null,
   mobileMenuToggle: null,
+  mobileMenu: null,
   overlay: null
 };
 
@@ -53,24 +45,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Elements Initialization
 function initializeElements() {
-  elements.quoteContainer = document.querySelector('.quote-section');
-  elements.filtersContainer = document.querySelector('.filters-section__scroll-wrapper');
-  elements.exercisesContainer = document.querySelector('.exercises-section__grid');
-  elements.searchForm = document.querySelector('.search-form');
-  elements.paginationContainer = document.querySelector('.pagination-container');
-  elements.modal = document.querySelector('.exercise-modal');
-  elements.ratingModal = document.querySelector('.rating-modal');
-  elements.subscriptionForm = document.querySelector('.subscription-form');
-  elements.filterTabs = document.querySelectorAll('.filter-tab');
-  elements.mobileMenu = document.querySelector('.header__mobile-menu');
+  elements.quoteContent = document.querySelector('.quote__content');
+  elements.filtersContainer = document.querySelector('.filters__categories');
+  elements.exercisesContainer = document.querySelector('.exercises__grid');
+  elements.searchForm = document.querySelector('.search__form');
+  elements.paginationContainer = document.querySelector('.pagination');
+  elements.exerciseModal = document.getElementById('exercise-modal');
+  elements.ratingModal = document.getElementById('rating-modal');
+  elements.subscriptionForm = document.querySelector('.footer__subscription');
   elements.mobileMenuToggle = document.querySelector('.header__mobile-toggle');
-  elements.overlay = document.querySelector('.header__overlay');
+  elements.mobileMenu = document.querySelector('.header__mobile-menu');
+  elements.overlay = document.querySelector('.overlay');
 }
 
 // Event Listeners
 function initializeEventListeners() {
   // Filter tabs
-  elements.filterTabs.forEach(tab => {
+  document.querySelectorAll('.filters__tab').forEach(tab => {
     tab.addEventListener('click', handleFilterTabClick);
   });
 
@@ -97,9 +88,6 @@ function initializeEventListeners() {
   // Modal close events
   document.addEventListener('click', handleModalClose);
   document.addEventListener('keydown', handleEscapeKey);
-
-  // Scroll events
-  window.addEventListener('scroll', handleScroll);
 }
 
 // Load Initial Data
@@ -111,9 +99,8 @@ async function loadInitialData() {
     ]);
     
     // Set Muscles as active filter
-    const musclesTab = document.getElementById('tab-muscles');
+    const musclesTab = document.getElementById('muscles-tab');
     if (musclesTab) {
-      musclesTab.classList.add('active');
       musclesTab.setAttribute('aria-selected', 'true');
     }
     
@@ -122,6 +109,26 @@ async function loadInitialData() {
     console.error('Error loading initial data:', error);
     showError('Failed to load initial data');
   }
+}
+
+// API Functions
+async function fetchApi(endpoint, options = {}) {
+  const url = `${API_BASE_URL}${endpoint}`;
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+  
+  if (!response.ok) {
+    const error = new Error(`API error: ${response.status}`);
+    error.status = response.status;
+    throw error;
+  }
+  
+  return response.json();
 }
 
 // Quote Management
@@ -137,34 +144,34 @@ async function loadQuote() {
       return;
     }
     
-    const quote = await getQuote();
+    const quote = await fetchApi('/quote');
     state.quote = quote;
     localStorage.setItem('dailyQuote', JSON.stringify(quote));
     localStorage.setItem('quoteDate', today);
     renderQuote();
   } catch (error) {
     console.error('Error loading quote:', error);
+    renderQuoteError();
   }
 }
 
 function renderQuote() {
-  if (!elements.quoteContainer || !state.quote) return;
+  if (!elements.quoteContent || !state.quote) return;
   
   const quoteHTML = `
-    <div class="quote-card card">
-      <div class="quote-content">
-        <p class="quote-text">"${state.quote.quote}"</p>
-        <cite class="quote-author">${state.quote.author}</cite>
-      </div>
-      <div class="quote-info">
-        <p class="quote-description">
-          Важливість щоденного фізичного навантаження тривалістю щонайменше 110 хвилин для підтримки здоров'я та добробуту.
-        </p>
-      </div>
-    </div>
+    <p class="quote__text">"${state.quote.quote}"</p>
+    <cite class="quote__author">${state.quote.author}</cite>
   `;
   
-  elements.quoteContainer.innerHTML = quoteHTML;
+  elements.quoteContent.innerHTML = quoteHTML;
+}
+
+function renderQuoteError() {
+  if (!elements.quoteContent) return;
+  
+  elements.quoteContent.innerHTML = `
+    <p class="quote__text">Не вдалося завантажити цитату дня</p>
+  `;
 }
 
 // Filters Management
@@ -173,12 +180,13 @@ async function loadFilters(filterType) {
     state.isLoading = true;
     showLoading(elements.filtersContainer);
     
-    const filters = await getFilters(filterType);
+    const filters = await fetchApi(`/filters?filter=${filterType}`);
     state.filters = filters;
     renderFilters();
   } catch (error) {
     console.error('Error loading filters:', error);
     showError('Failed to load filters');
+    renderFiltersError();
   } finally {
     state.isLoading = false;
   }
@@ -187,10 +195,19 @@ async function loadFilters(filterType) {
 function renderFilters() {
   if (!elements.filtersContainer) return;
   
+  if (state.filters.length === 0) {
+    elements.filtersContainer.innerHTML = `
+      <div class="no-filters">
+        <p>Категорії не знайдено</p>
+      </div>
+    `;
+    return;
+  }
+  
   const filtersHTML = state.filters.map(filter => `
-    <div class="filter-category card card--interactive">
+    <div class="filter-category">
       <button class="filter-category__button" data-filter="${filter.filter}" data-name="${filter.name}">
-        <img src="${filter.image}" alt="" class="filter-category__icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <img src="${filter.image}" alt="${filter.name}" class="filter-category__image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="filter-category__icon" style="display:none;">💪</div>
         <span class="filter-category__name">${filter.name}</span>
       </button>
@@ -205,17 +222,25 @@ function renderFilters() {
   });
 }
 
+function renderFiltersError() {
+  if (!elements.filtersContainer) return;
+  
+  elements.filtersContainer.innerHTML = `
+    <div class="no-filters">
+      <p>Не вдалося завантажити фільтри</p>
+    </div>
+  `;
+}
+
 function handleFilterTabClick(event) {
   const tab = event.target;
   const filterType = tab.textContent.trim();
   
   // Update active state
-  elements.filterTabs.forEach(t => {
-    t.classList.remove('active');
+  document.querySelectorAll('.filters__tab').forEach(t => {
     t.setAttribute('aria-selected', 'false');
   });
   
-  tab.classList.add('active');
   tab.setAttribute('aria-selected', 'true');
   
   state.currentFilter = filterType;
@@ -238,32 +263,32 @@ async function loadExercises() {
     state.isLoading = true;
     showLoading(elements.exercisesContainer);
     
-    const params = {
-      page: state.currentPage,
-      limit: state.exercisesPerPage
-    };
+    const params = new URLSearchParams();
+    params.set('page', state.currentPage);
+    params.set('limit', state.exercisesPerPage);
     
     if (state.selectedCategory) {
       if (state.currentFilter === 'Muscles') {
-        params.muscles = state.selectedCategory;
+        params.set('muscles', state.selectedCategory);
       } else if (state.currentFilter === 'Body parts') {
-        params.bodypart = state.selectedCategory;
+        params.set('bodypart', state.selectedCategory);
       } else if (state.currentFilter === 'Equipment') {
-        params.equipment = state.selectedCategory;
+        params.set('equipment', state.selectedCategory);
       }
     }
     
     if (state.searchKeyword) {
-      params.keyword = state.searchKeyword;
+      params.set('keyword', state.searchKeyword);
     }
     
-    const response = await getExercises(params);
+    const response = await fetchApi(`/exercises?${params.toString()}`);
     state.exercises = response.results || [];
     renderExercises();
     renderPagination(response.totalPages || 1);
   } catch (error) {
     console.error('Error loading exercises:', error);
     showError('Failed to load exercises');
+    renderExercisesError();
   } finally {
     state.isLoading = false;
   }
@@ -274,41 +299,31 @@ function renderExercises() {
   
   if (state.exercises.length === 0) {
     elements.exercisesContainer.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state__icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-        </div>
-        <h3 class="empty-state__title">Вправи не знайдено</h3>
-        <p class="empty-state__description">
-          Спробуйте змінити фільтри або пошуковий запит
-        </p>
+      <div class="no-exercises">
+        <h3>Вправи не знайдено</h3>
+        <p>Спробуйте змінити фільтри або пошуковий запит</p>
       </div>
     `;
     return;
   }
   
   const exercisesHTML = state.exercises.map(exercise => `
-    <article class="exercise-card card card--interactive" data-id="${exercise._id}">
-      <div class="exercise-card__image-wrapper">
-        <img src="${exercise.gifUrl || './images/placeholder.jpg'}" alt="${exercise.name}" class="exercise-card__image">
-      </div>
-      <div class="exercise-card__body">
+    <article class="exercise-card" data-id="${exercise._id}">
+      <img src="${exercise.gifUrl || './images/placeholder.jpg'}" alt="${exercise.name}" class="exercise-card__image">
+      <div class="exercise-card__content">
         <h3 class="exercise-card__title">${exercise.name}</h3>
         <div class="exercise-card__meta">
           <span class="exercise-card__badge">${exercise.bodyPart}</span>
           <span class="exercise-card__badge">${exercise.target}</span>
         </div>
         <div class="exercise-card__stats">
-          <span class="exercise-card__calories">${exercise.burnedCalories || 0} калорій</span>
-          <span class="exercise-card__time">3 хв</span>
+          <span>${exercise.burnedCalories || 0} калорій</span>
+          <span>3 хв</span>
         </div>
         <div class="exercise-card__rating">
           ${renderStars(exercise.rating || 0)}
         </div>
-        <button class="exercise-card__start-btn btn btn--primary" data-id="${exercise._id}">
+        <button class="exercise-card__start-btn" data-id="${exercise._id}">
           Start
         </button>
       </div>
@@ -323,6 +338,17 @@ function renderExercises() {
   });
 }
 
+function renderExercisesError() {
+  if (!elements.exercisesContainer) return;
+  
+  elements.exercisesContainer.innerHTML = `
+    <div class="no-exercises">
+      <h3>Не вдалося завантажити вправи</h3>
+      <p>Спробуйте оновити сторінку</p>
+    </div>
+  `;
+}
+
 function renderStars(rating) {
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 !== 0;
@@ -330,13 +356,13 @@ function renderStars(rating) {
   
   let stars = '';
   for (let i = 0; i < fullStars; i++) {
-    stars += '<div class="exercise-card__star">★</div>';
+    stars += '<span class="star">★</span>';
   }
   if (hasHalfStar) {
-    stars += '<div class="exercise-card__star">☆</div>';
+    stars += '<span class="star">☆</span>';
   }
   for (let i = 0; i < emptyStars; i++) {
-    stars += '<div class="exercise-card__star empty">☆</div>';
+    stars += '<span class="star empty">☆</span>';
   }
   
   return stars;
@@ -345,7 +371,7 @@ function renderStars(rating) {
 function renderPagination(totalPages) {
   if (!elements.paginationContainer || totalPages <= 1) return;
   
-  let paginationHTML = '<div class="pagination">';
+  let paginationHTML = '';
   
   for (let i = 1; i <= totalPages; i++) {
     const isActive = i === state.currentPage;
@@ -356,7 +382,6 @@ function renderPagination(totalPages) {
     `;
   }
   
-  paginationHTML += '</div>';
   elements.paginationContainer.innerHTML = paginationHTML;
   
   // Add click listeners
@@ -389,7 +414,7 @@ async function handleExerciseStart(event) {
   const exerciseId = event.target.dataset.id;
   
   try {
-    const exercise = await getExerciseById(exerciseId);
+    const exercise = await fetchApi(`/exercises/${exerciseId}`);
     state.modalData = exercise;
     renderExerciseModal();
     openModal('exercise');
@@ -405,162 +430,94 @@ function renderExerciseModal() {
   const exercise = state.modalData;
   const isFavorite = state.favorites.some(fav => fav._id === exercise._id);
   
-  const modalHTML = `
-    <div class="exercise-modal">
-      <div class="exercise-modal__overlay"></div>
-      <div class="exercise-modal__content">
-        <button class="exercise-modal__close" aria-label="Закрити">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-        
-        <div class="exercise-modal__media">
-          ${exercise.gifUrl ? `
-            <video autoplay loop muted playsinline class="exercise-modal__video">
-              <source src="${exercise.gifUrl}" type="video/mp4">
-            </video>
-          ` : `
-            <img src="${exercise.image || './images/placeholder.jpg'}" alt="${exercise.name}" class="exercise-modal__image">
-          `}
-        </div>
-        
-        <div class="exercise-modal__info">
-          <h2 class="exercise-modal__title">${exercise.name}</h2>
-          
-          <div class="exercise-modal__rating">
-            ${renderStars(exercise.rating || 0)}
-            <span class="exercise-modal__rating-value">(${exercise.rating || 0})</span>
-          </div>
-          
-          <div class="exercise-modal__details">
-            <div class="exercise-modal__detail">
-              <span class="exercise-modal__label">Ціль:</span>
-              <span class="exercise-modal__value">${exercise.target}</span>
-            </div>
-            <div class="exercise-modal__detail">
-              <span class="exercise-modal__label">Частина тіла:</span>
-              <span class="exercise-modal__value">${exercise.bodyPart}</span>
-            </div>
-            <div class="exercise-modal__detail">
-              <span class="exercise-modal__label">Популярність:</span>
-              <span class="exercise-modal__value">${exercise.popularity || 0}%</span>
-            </div>
-            <div class="exercise-modal__detail">
-              <span class="exercise-modal__label">Калорії:</span>
-              <span class="exercise-modal__value">${exercise.burnedCalories || 0} калорій за 3 хв</span>
-            </div>
-          </div>
-          
-          <p class="exercise-modal__description">${exercise.description || ''}</p>
-          
-          <div class="exercise-modal__actions">
-            <button class="exercise-modal__favorite-btn ${isFavorite ? 'favorited' : ''}" data-id="${exercise._id}">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-              </svg>
-              ${isFavorite ? 'Видалити' : 'Додати'}
-            </button>
-            
-            <button class="exercise-modal__rating-btn btn btn--primary">
-              Give a rating
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
+  // Update modal content
+  const modalTitle = elements.exerciseModal.querySelector('.modal__title');
+  const modalMedia = elements.exerciseModal.querySelector('.modal__media');
+  const modalDescription = elements.exerciseModal.querySelector('.modal__description');
+  const modalFavorite = elements.exerciseModal.querySelector('.modal__favorite');
   
-  // Create modal if it doesn't exist
-  if (!elements.modal) {
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = modalHTML;
-    document.body.appendChild(modalContainer.firstElementChild);
-    elements.modal = document.querySelector('.exercise-modal');
-  } else {
-    elements.modal.innerHTML = modalHTML;
+  if (modalTitle) modalTitle.textContent = exercise.name;
+  
+  if (modalMedia) {
+    if (exercise.gifUrl) {
+      modalMedia.innerHTML = `
+        <video autoplay loop muted playsinline class="modal__video">
+          <source src="${exercise.gifUrl}" type="video/mp4">
+        </video>
+      `;
+    } else {
+      modalMedia.innerHTML = `
+        <img src="${exercise.image || './images/placeholder.jpg'}" alt="${exercise.name}" class="modal__image">
+      `;
+    }
   }
   
-  // Add event listeners
-  const closeBtn = elements.modal.querySelector('.exercise-modal__close');
-  const favoriteBtn = elements.modal.querySelector('.exercise-modal__favorite-btn');
-  const ratingBtn = elements.modal.querySelector('.exercise-modal__rating-btn');
-  const overlay = elements.modal.querySelector('.exercise-modal__overlay');
+  if (modalDescription) {
+    modalDescription.innerHTML = `
+      <div class="modal__details">
+        <p><strong>Ціль:</strong> ${exercise.target}</p>
+        <p><strong>Частина тіла:</strong> ${exercise.bodyPart}</p>
+        <p><strong>Популярність:</strong> ${exercise.popularity || 0}%</p>
+        <p><strong>Калорії:</strong> ${exercise.burnedCalories || 0} за 3 хв</p>
+      </div>
+      <p>${exercise.description || ''}</p>
+    `;
+  }
   
-  closeBtn.addEventListener('click', () => closeModal('exercise'));
-  overlay.addEventListener('click', () => closeModal('exercise'));
-  favoriteBtn.addEventListener('click', handleFavoriteToggle);
-  ratingBtn.addEventListener('click', openRatingModal);
+  if (modalFavorite) {
+    modalFavorite.textContent = isFavorite ? 'Видалити з улюблених' : 'Додати до улюблених';
+    modalFavorite.onclick = () => handleFavoriteToggle(exercise._id);
+  }
 }
 
+function openModal(type) {
+  const modal = type === 'exercise' ? elements.exerciseModal : elements.ratingModal;
+  if (modal) {
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeModal(type) {
+  const modal = type === 'exercise' ? elements.exerciseModal : elements.ratingModal;
+  if (modal) {
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+}
+
+function handleModalClose(event) {
+  const closeBtn = event.target.closest('.modal__close');
+  const overlay = event.target.closest('.modal__overlay');
+  
+  if (closeBtn || overlay) {
+    if (elements.exerciseModal && elements.exerciseModal.getAttribute('aria-hidden') === 'false') {
+      closeModal('exercise');
+    }
+    if (elements.ratingModal && elements.ratingModal.getAttribute('aria-hidden') === 'false') {
+      closeModal('rating');
+    }
+  }
+}
+
+function handleEscapeKey(event) {
+  if (event.key === 'Escape') {
+    if (elements.exerciseModal && elements.exerciseModal.getAttribute('aria-hidden') === 'false') {
+      closeModal('exercise');
+    }
+    if (elements.ratingModal && elements.ratingModal.getAttribute('aria-hidden') === 'false') {
+      closeModal('rating');
+    }
+    if (elements.mobileMenu && elements.mobileMenu.classList.contains('active')) {
+      closeMobileMenu();
+    }
+  }
+}
+
+// Rating Modal
 function openRatingModal() {
-  renderRatingModal();
+  closeModal('exercise');
   openModal('rating');
-}
-
-function renderRatingModal() {
-  const ratingModalHTML = `
-    <div class="rating-modal">
-      <div class="rating-modal__overlay"></div>
-      <div class="rating-modal__content">
-        <button class="rating-modal__close" aria-label="Закрити">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-        
-        <h2 class="rating-modal__title">Оцініть вправу</h2>
-        
-        <div class="rating-modal__stars">
-          ${[1, 2, 3, 4, 5].map(rating => `
-            <input type="radio" id="rating-${rating}" name="rating" value="${rating}" class="rating-modal__radio">
-            <label for="rating-${rating}" class="rating-modal__star">
-              ★
-            </label>
-          `).join('')}
-        </div>
-        
-        <form class="rating-modal__form">
-          <div class="rating-modal__form-group">
-            <label for="rating-email" class="rating-modal__label">Email:</label>
-            <input 
-              type="email" 
-              id="rating-email" 
-              class="rating-modal__input" 
-              placeholder="your.email@example.com"
-              required
-              pattern="^\\w+(\\.\\w+)?@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$"
-            >
-          </div>
-          
-          <button type="submit" class="rating-modal__submit btn btn--primary">
-            Send
-          </button>
-        </form>
-      </div>
-    </div>
-  `;
-  
-  // Create rating modal if it doesn't exist
-  if (!elements.ratingModal) {
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = ratingModalHTML;
-    document.body.appendChild(modalContainer.firstElementChild);
-    elements.ratingModal = document.querySelector('.rating-modal');
-  } else {
-    elements.ratingModal.innerHTML = ratingModalHTML;
-  }
-  
-  // Add event listeners
-  const closeBtn = elements.ratingModal.querySelector('.rating-modal__close');
-  const overlay = elements.ratingModal.querySelector('.rating-modal__overlay');
-  const form = elements.ratingModal.querySelector('.rating-modal__form');
-  
-  closeBtn.addEventListener('click', () => closeModal('rating'));
-  overlay.addEventListener('click', () => closeModal('rating'));
-  form.addEventListener('submit', handleRatingSubmit);
 }
 
 async function handleRatingSubmit(event) {
@@ -568,7 +525,7 @@ async function handleRatingSubmit(event) {
   
   const formData = new FormData(event.target);
   const rating = parseInt(formData.get('rating'));
-  const email = formData.get('email') || document.getElementById('rating-email').value;
+  const email = formData.get('email');
   
   if (!rating || !email) {
     showError('Будь ласка, оберіть рейтинг та введіть email');
@@ -576,10 +533,13 @@ async function handleRatingSubmit(event) {
   }
   
   try {
-    await patchExerciseRating(state.modalData._id, rating);
+    await fetchApi(`/exercises/${state.modalData._id}/rating`, {
+      method: 'PATCH',
+      body: JSON.stringify({ rating }),
+    });
+    
     showSuccess('Рейтинг успішно надіслано!');
     closeModal('rating');
-    closeModal('exercise');
     
     // Reload exercises to show updated rating
     loadExercises();
@@ -589,8 +549,8 @@ async function handleRatingSubmit(event) {
   }
 }
 
-function handleFavoriteToggle(event) {
-  const exerciseId = event.currentTarget.dataset.id;
+// Favorites Management
+function handleFavoriteToggle(exerciseId) {
   const exercise = state.exercises.find(ex => ex._id === exerciseId);
   
   if (!exercise) return;
@@ -599,26 +559,14 @@ function handleFavoriteToggle(event) {
   
   if (index > -1) {
     state.favorites.splice(index, 1);
-    event.currentTarget.classList.remove('favorited');
-    event.currentTarget.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-      </svg>
-      Додати
-    `;
+    showSuccess('Вправу видалено з улюблених');
   } else {
     state.favorites.push(exercise);
-    event.currentTarget.classList.add('favorited');
-    event.currentTarget.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-      </svg>
-      Видалити
-    `;
+    showSuccess('Вправу додано до улюблених');
   }
   
-  // Save to localStorage
   localStorage.setItem('favorites', JSON.stringify(state.favorites));
+  renderExerciseModal(); // Update modal button
 }
 
 // Subscription Management
@@ -634,7 +582,11 @@ async function handleSubscriptionSubmit(event) {
   }
   
   try {
-    await postSubscription(email);
+    await fetchApi('/subscription', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+    
     showSuccess('Підписка успішна!');
     event.target.reset();
   } catch (error) {
@@ -668,67 +620,12 @@ function closeMobileMenu() {
   document.body.style.overflow = '';
 }
 
-// Modal Management
-function openModal(type) {
-  const modal = type === 'exercise' ? elements.modal : elements.ratingModal;
-  if (modal) {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-}
-
-function closeModal(type) {
-  const modal = type === 'exercise' ? elements.modal : elements.ratingModal;
-  if (modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-}
-
-function handleModalClose(event) {
-  const closeBtn = event.target.closest('.exercise-modal__close, .rating-modal__close');
-  const overlay = event.target.closest('.exercise-modal__overlay, .rating-modal__overlay');
-  
-  if (closeBtn || overlay) {
-    if (elements.modal && elements.modal.classList.contains('active')) {
-      closeModal('exercise');
-    }
-    if (elements.ratingModal && elements.ratingModal.classList.contains('active')) {
-      closeModal('rating');
-    }
-  }
-}
-
-function handleEscapeKey(event) {
-  if (event.key === 'Escape') {
-    if (elements.modal && elements.modal.classList.contains('active')) {
-      closeModal('exercise');
-    }
-    if (elements.ratingModal && elements.ratingModal.classList.contains('active')) {
-      closeModal('rating');
-    }
-    if (elements.mobileMenu && elements.mobileMenu.classList.contains('active')) {
-      closeMobileMenu();
-    }
-  }
-}
-
-// Scroll Management
-function handleScroll() {
-  const header = document.querySelector('.header');
-  const scrolled = window.scrollY > 50;
-  
-  if (header) {
-    header.classList.toggle('scrolled', scrolled);
-  }
-}
-
 // Utility Functions
 function showLoading(container) {
   if (container) {
     container.innerHTML = `
       <div class="loading">
-        <div class="loading__spinner"></div>
+        <div class="spinner"></div>
       </div>
     `;
   }
@@ -746,6 +643,20 @@ function showNotification(message, type = 'info') {
   const notification = document.createElement('div');
   notification.className = `notification notification--${type}`;
   notification.textContent = message;
+  notification.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    background-color: ${type === 'error' ? '#f56565' : type === 'success' ? '#48bb78' : '#3182ce'};
+    color: white;
+    border-radius: 8px;
+    font-weight: 500;
+    z-index: 9999;
+    transform: translateY(100px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  `;
   
   document.body.appendChild(notification);
   
@@ -756,7 +667,7 @@ function showNotification(message, type = 'info') {
   
   // Remove after 3 seconds
   setTimeout(() => {
-    notification.style.transform = 'translateY(100%)';
+    notification.style.transform = 'translateY(100px)';
     setTimeout(() => {
       if (notification.parentNode) {
         notification.parentNode.removeChild(notification);
@@ -764,17 +675,6 @@ function showNotification(message, type = 'info') {
     }, 300);
   }, 3000);
 }
-
-// Load favorites from localStorage
-function loadFavorites() {
-  const stored = localStorage.getItem('favorites');
-  if (stored) {
-    state.favorites = JSON.parse(stored);
-  }
-}
-
-// Initialize favorites
-loadFavorites();
 
 // Export for testing
 window.YourEnergyApp = {
