@@ -1,61 +1,62 @@
 /* ===================================
    ATOMIC DESIGN TOKENS
-   Pixel-perfect values from Figma
+   Updated color palette for new design
    =================================== */
 
 :root {
   /* Color System */
-  --color-primary-50: #f8fafc;
-  --color-primary-100: #f1f5f9;
-  --color-primary-200: #e2e8f0;
-  --color-primary-300: #cbd5e1;
-  --color-primary-400: #94a3b8;
-  --color-primary-500: #64748b;
-  --color-primary-600: #475569;
-  --color-primary-700: #334155;
-  --color-primary-800: #1e293b;
-  --color-primary-900: #0f172a;
+  --color-primary-50: #f8f9fa;
+  --color-primary-100: #e9ecef;
+  --color-primary-200: #dee2e6;
+  --color-primary-300: #ced4da;
+  --color-primary-400: #adb5bd;
+  --color-primary-500: #6c757d;
+  --color-primary-600: #495057;
+  --color-primary-700: #343a40;
+  --color-primary-800: #212529;
+  --color-primary-900: #000000;
   
-  /* Brand Colors */
-  --color-brand-primary: #1a1f3a;
-  --color-brand-secondary: #2d3561;
-  --color-brand-tertiary: #3e4c7a;
-  --color-brand-accent: #ff6b6b;
-  --color-brand-accent-light: #ff8787;
+  /* Brand Colors - New Palette */
+  --color-brand-primary: #f8f9fa;
+  --color-brand-secondary: #e9ecef;
+  --color-brand-tertiary: #dee2e6;
+  --color-brand-accent: #0066ff;
+  --color-brand-accent-light: #4d94ff;
+  --color-brand-accent-hover: #0052cc;
   
-  /* Gradient System */
-  --gradient-primary: linear-gradient(135deg, #1a1f3a 0%, #2d3561 50%, #3e4c7a 100%);
-  --gradient-secondary: linear-gradient(135deg, rgba(26, 31, 58, 0.6) 0%, rgba(45, 53, 97, 0.6) 100%);
-  --gradient-card: linear-gradient(135deg, rgba(26, 31, 58, 0.8) 0%, rgba(45, 53, 97, 0.8) 100%);
-  --gradient-hero: linear-gradient(135deg, rgba(26, 31, 58, 0.95) 0%, rgba(45, 53, 97, 0.95) 100%);
+  /* Gradient System - Simplified */
+  --gradient-primary: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  --gradient-secondary: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  --gradient-hero: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   
   /* Text Colors */
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.92);
-  --text-tertiary: rgba(255, 255, 255, 0.75);
-  --text-quaternary: rgba(255, 255, 255, 0.6);
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-tertiary: #6c757d;
+  --text-quaternary: #adb5bd;
   
   /* Background System */
-  --bg-card: rgba(255, 255, 255, 0.08);
-  --bg-card-hover: rgba(255, 255, 255, 0.12);
-  --bg-filter: rgba(255, 255, 255, 0.08);
-  --bg-filter-hover: rgba(255, 255, 255, 0.15);
-  --bg-tag: rgba(255, 255, 255, 0.1);
-  --bg-tag-hover: rgba(255, 255, 255, 0.3);
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8f9fa;
+  --bg-filter: #ffffff;
+  --bg-filter-hover: #f8f9fa;
+  --bg-tag: #e9ecef;
+  --bg-tag-hover: #dee2e6;
   
   /* Border System */
-  --border-card: rgba(255, 255, 255, 0.1);
-  --border-card-hover: rgba(255, 255, 255, 0.15);
-  --border-tag: rgba(255, 255, 255, 0.12);
-  --border-accent: var(--color-brand-accent);
+  --border-card: #dee2e6;
+  --border-card-hover: #0066ff;
+  --border-tag: #dee2e6;
+  --border-accent: #0066ff;
   
-  /* Shadow System */
-  --shadow-xs: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.12);
-  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
-  --shadow-xl: 0 12px 30px rgba(0, 0, 0, 0.2);
-  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.3);
+  /* Shadow System - Lighter */
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-2xl: 0 12px 32px rgba(0, 0, 0, 0.18);
   
   /* Spacing System - Mobile First */
   --space-1: 4px;
