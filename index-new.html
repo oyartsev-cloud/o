@@ -7,7 +7,6 @@
   <title>Your Energy - Силові тренування</title>
   
   <!-- Preload critical resources -->
-  <link rel="preload" href="/o/assets/main-DkYUnTS8.js" as="script">
   
   <!-- Styles -->
   
@@ -19,7 +18,7 @@
   <meta property="og:description" content="Каталог вправ для силових тренувань з фільтрами за частиною тіла, м'язами та обладнанням">
   <meta property="og:type" content="website">
   <meta property="og:image" content="./images/hero-fitness.jpg">
-  <link rel="stylesheet" crossorigin href="/o/assets/index-refactored-BaGe5Mbc.css">
+  <link rel="stylesheet" crossorigin href="/o/assets/index-new-ZtBeTHcO.css">
 </head>
 <body>
   <!-- Skip to main content -->
@@ -31,9 +30,7 @@
       <nav class="header__container" role="navigation" aria-label="Основна навігація">
         <div class="header__logo">
           <a href="/" aria-label="Your Energy - на головну">
-            <svg width="120" height="32" viewBox="0 0 120 32" fill="currentColor">
-              <text x="0" y="24" font-family="Inter, sans-serif" font-size="20" font-weight="700">Your Energy</text>
-            </svg>
+            <img src="./images/logo.svg" alt="Your Energy Logo" width="120" height="32">
           </a>
         </div>
         
@@ -64,7 +61,7 @@
             <div class="hero-section__content">
               <h1 id="hero-title" class="sr-only">Your Energy - Силові тренування</h1>
               <p class="hero-section__description">
-                Your Energy — каталог вправ для силових тренувань. Обирайте фільтри за частиною тіла, М'язами чи обладнанням, знаходьте вправи та додавайте улюблені.
+                Your Energy — каталог вправ для силових тренувань. Обирайте фільтри за частиною тіла, м'язами чи обладнанням, знаходьте вправи та додавайте улюблені.
               </p>
               
               <nav class="hero-section__tags" aria-label="Популярні фільтри">
@@ -162,71 +159,71 @@
           </div>
           
           <div 
-            class="filters-section__grid filters-grid" 
+            class="filters-section__grid" 
             role="tabpanel" 
             id="all-filters"
             aria-labelledby="tab-all"
           >
-            <!-- Filter Categories - 9 filters for mobile (3x3 grid) -->
-            <div class="filter-category card card--interactive">
+            <!-- Filter Categories -->
+            <div class="filter-category">
               <button class="filter-category__button" aria-label="Груди">
-                <div class="filter-category__icon">💪</div>
+                <img src="./images/icons/chest.svg" alt="" class="filter-category__icon">
                 <span class="filter-category__name">Груди</span>
               </button>
             </div>
             
-            <div class="filter-category card card--interactive">
+            <div class="filter-category">
               <button class="filter-category__button" aria-label="Спина">
-                <div class="filter-category__icon">🏋️</div>
+                <img src="./images/icons/back.svg" alt="" class="filter-category__icon">
                 <span class="filter-category__name">Спина</span>
               </button>
             </div>
             
-            <div class="filter-category card card--interactive">
+            <div class="filter-category">
               <button class="filter-category__button" aria-label="Ноги">
-                <div class="filter-category__icon">🦵</div>
+                <img src="./images/icons/legs.svg" alt="" class="filter-category__icon">
                 <span class="filter-category__name">Ноги</span>
               </button>
             </div>
             
-            <div class="filter-category card card--interactive">
+            <div class="filter-category">
               <button class="filter-category__button" aria-label="Плечі">
-                <div class="filter-category__icon">💪</div>
+                <img src="./images/icons/shoulders.svg" alt="" class="filter-category__icon">
                 <span class="filter-category__name">Плечі</span>
               </button>
             </div>
             
-            <div class="filter-category card card--interactive">
+            <div class="filter-category">
               <button class="filter-category__button" aria-label="Руки">
-                <div class="filter-category__icon">💪</div>
+                <img src="./images/icons/arms.svg" alt="" class="filter-category__icon">
                 <span class="filter-category__name">Руки</span>
               </button>
             </div>
             
-            <div class="filter-category card card--interactive">
+            <div class="filter-category">
               <button class="filter-category__button" aria-label="Прес">
-                <div class="filter-category__icon">🏋️</div>
+                <img src="./images/icons/core.svg" alt="" class="filter-category__icon">
                 <span class="filter-category__name">Прес</span>
               </button>
             </div>
             
-            <div class="filter-category card card--interactive">
+            <div class="filter-category">
               <button class="filter-category__button" aria-label="Біцепс">
-                <div class="filter-category__icon">💪</div>
+                <img src="./images/icons/biceps.svg" alt="" class="filter-category__icon">
                 <span class="filter-category__name">Біцепс</span>
               </button>
             </div>
             
-            <div class="filter-category card card--interactive">
+            <div class="filter-category">
               <button class="filter-category__button" aria-label="Трицепс">
-                <div class="filter-category__icon">💪</div>
+                <img src="./images/icons/triceps.svg" alt="" class="filter-category__icon">
                 <span class="filter-category__name">Трицепс</span>
               </button>
             </div>
             
-            <div class="filter-category card card--interactive">
+            <div class="filter-category">
               <button class="filter-category__button" aria-label="Квадрицепс">
-                <div class="filter-category__icon">🦵</div>
+                <img src="./images/icons/quads.svg" alt="" class="filter-category__icon">
                 <span class="filter-category__name">Квадрицепс</span>
               </button>
             </div>
@@ -239,13 +236,15 @@
         <div class="container">
           <div class="exercises-section__header">
             <h2 id="exercises-title" class="exercises-section__title">Вправи</h2>
+            
+            <!-- Sort/Filter controls could go here -->
           </div>
           
-          <div class="exercises-section__grid exercises-grid">
+          <div class="exercises-section__grid">
             <!-- Exercise Cards -->
-            <article class="exercise-card card card--interactive">
+            <article class="exercise-card">
               <div class="exercise-card__image-wrapper">
-                <img src="./images/hero-fitness.jpg" alt="Жим лежачи" class="exercise-card__image">
+                <img src="./images/exercises/bench-press.jpg" alt="Жим лежачи" class="exercise-card__image">
               </div>
               <div class="exercise-card__body">
                 <h3 class="exercise-card__title">Жим лежачи</h3>
@@ -263,9 +262,9 @@
               </div>
             </article>
             
-            <article class="exercise-card card card--interactive">
+            <article class="exercise-card">
               <div class="exercise-card__image-wrapper">
-                <img src="./images/hero-fitness.jpg" alt="Присідання" class="exercise-card__image">
+                <img src="./images/exercises/squat.jpg" alt="Присідання" class="exercise-card__image">
               </div>
               <div class="exercise-card__body">
                 <h3 class="exercise-card__title">Присідання</h3>
@@ -283,9 +282,9 @@
               </div>
             </article>
             
-            <article class="exercise-card card card--interactive">
+            <article class="exercise-card">
               <div class="exercise-card__image-wrapper">
-                <img src="./images/hero-fitness.jpg" alt="Станова тяга" class="exercise-card__image">
+                <img src="./images/exercises/deadlift.jpg" alt="Станова тяга" class="exercise-card__image">
               </div>
               <div class="exercise-card__body">
                 <h3 class="exercise-card__title">Станова тяга</h3>
@@ -313,7 +312,7 @@
         <!-- Quote Section -->
         <section class="quote-section" aria-labelledby="quote-title">
           <h3 id="quote-title" class="sr-only">Мотиваційна цитата</h3>
-          <div class="quote-card card">
+          <div class="quote-card">
             <div class="quote-content">
               <p class="quote-text">
                 "Сила - це не лише про м'язи, це про волю. Кожен тренування - це крок до кращої версії себе."
@@ -366,6 +365,6 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="./js/main.js"></script>
+  <script src="./js/main.js" defer></script>
 </body>
 </html>
