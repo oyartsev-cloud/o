@@ -1,0 +1,215 @@
+/* ===================================
+   LAYOUT SYSTEM - Full Refactor
+   Pixel-perfect container system
+   =================================== */
+
+/* Container System */
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+/* Mobile First Approach */
+@media (min-width: 375px) {
+  .container {
+    max-width: 375px;
+    padding: 0 var(--space-4);
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 0 var(--space-8);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+    padding: 0 var(--space-8);
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1400px;
+    padding: 0 var(--space-10);
+  }
+}
+
+/* Grid Systems */
+.grid {
+  display: grid;
+}
+
+.grid--3-cols {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid--4-cols {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid--gap-sm {
+  gap: var(--space-3);
+}
+
+.grid--gap-md {
+  gap: var(--space-4);
+}
+
+.grid--gap-lg {
+  gap: var(--space-5);
+}
+
+/* Flexbox Utilities */
+.flex {
+  display: flex;
+}
+
+.flex--col {
+  flex-direction: column;
+}
+
+.flex--row {
+  flex-direction: row;
+}
+
+.flex--center {
+  align-items: center;
+  justify-content: center;
+}
+
+.flex--between {
+  justify-content: space-between;
+}
+
+.flex--gap-sm {
+  gap: var(--space-2);
+}
+
+.flex--gap-md {
+  gap: var(--space-4);
+}
+
+.flex--gap-lg {
+  gap: var(--space-6);
+}
+
+/* Section Spacing */
+.section {
+  padding: var(--space-6) 0;
+}
+
+.section--sm {
+  padding: var(--space-5) 0;
+}
+
+.section--lg {
+  padding: var(--space-8) 0;
+}
+
+.section--xl {
+  padding: var(--space-10) 0;
+}
+
+/* Responsive Grid for Filters */
+@media (min-width: 768px) {
+  .filters-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+}
+
+@media (min-width: 1024px) {
+  .filters-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+}
+
+@media (min-width: 1400px) {
+  .filters-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+  }
+}
+
+/* Responsive Grid for Exercises */
+@media (min-width: 768px) {
+  .exercises-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .exercises-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-7);
+  }
+}
+
+@media (min-width: 1400px) {
+  .exercises-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-7);
+  }
+}
+
+/* Hero Layout */
+.hero-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .hero-layout {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-10);
+    align-items: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-layout {
+    gap: var(--space-14);
+  }
+}
+
+/* Main Content Layout */
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+@media (min-width: 1024px) {
+  .main-layout {
+    flex-direction: row;
+    gap: var(--space-8);
+  }
+  
+  .main-layout__sidebar {
+    flex-shrink: 0;
+    width: 280px;
+  }
+  
+  .main-layout__content {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 1400px) {
+  .main-layout {
+    gap: var(--space-10);
+  }
+  
+  .main-layout__sidebar {
+    width: 320px;
+  }
+}
